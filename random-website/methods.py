@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from cs50 import SQL
 from datetime import date
 
+db = SQL("sqlite:///accounts.db")
 
 def apology(message, code=400):
     """Render message as an apology to user."""
