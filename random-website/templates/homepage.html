@@ -1,21 +1,29 @@
-{% extends layout.html %}
+{% extends "layout.html" %}
 
 {% block title %}
     To-Do List
 {% endblock %} 
 
 {% block main %}
-    <table>
+    <table class="table">
         <thead>
             <tr>
                 <th scope="col">Date</th>
                 <th scope="col">Task</th>
                 <th scope="col">Description</th>
+                <th scope="col">Difficulty</th>
                 <th scope="col">Complete</th>
             </tr>
         </thead>
         <tbody>
-            
+            {% for day in range(30) %}
+            <tr>
+                <th scope="row">{{ date }}</th>
+                <td>{{ task_name }}</td>
+                <td>{{ task_description }}</td>
+                <td>{{ task_difficulty }}</td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
 {% endblock %} 
