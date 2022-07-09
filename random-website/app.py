@@ -27,12 +27,31 @@ def after_request(response):
 @app.route("/")
 @login_required
 def homepage():
-    result = db.execute("SELECT * FROM tasks JOIN accounts ON tasks.account_id=accounts.id WHERE accounts.id=:id", id=session("user_id"))
-    task_name = result[0]["name"]
-    task_description = result[0]["description"]
-    task_difficulty = result[0]["difficulty"]
+    result = db.execute("SELECT * FROM tasks WHERE account_id = ? ORDER BY start_date ASC", session["user_id"])
+    name = []
+    description = []
+    difficulty = []
+    start = []
+    end = []
 
-    return render_template("homepage.html", date=today_date, task_name=task_name, task_description=task_description, task_difficulty=task_difficulty)
+    for i in range(len(result)):
+        tmp1 = result[i]["task_name"]
+        name.append(tmp1)
+
+        tmp2 = result[i]["description"]
+        description.append(tmp2)
+
+        tmp3 = result[i]["difficulty"]
+        difficulty.append(tmp3)
+
+        tmp4 = result[i]["start_date"]
+        start.append(tmp4)
+
+        tmp5 = result[i]["end_date"]
+        end.append(tmp5)
+    
+    length = len(name)
+    return render_template("homepage.html", name=name, description = description, difficulty = difficulty, start=start, end=end, length=length)
 
 @app.route("/register", methods = ["GET", "POST"])
 def register():
@@ -52,7 +71,7 @@ def register():
         first_name = request.form.get("first_name")
         last_name = request.form.get("last_name")
 
-        db.execute("INSERT INTO accounts (first_name, last_name, username, password) VALUES (:first_name, :last_name, :username, :password)", first_name=first_name, last_name=last_name, username=username, password=password)
+        register = db.execute("INSERT INTO accounts (first_name, last_name, username, password) VALUES (:first_name, :last_name, :username, :password)", first_name=first_name, last_name=last_name, username=username, password=password)
         session["user_id"] = register
         return redirect("/")
 
@@ -92,7 +111,17 @@ def create_task():
         return render_template("create_task.html")
 
     #TODO: 
-    
+    task_name = request.form.get("task_name")
+    task_description = request.form.get("task_description")
+    task_difficulty = request.form.get("task_difficulty")
+    start_date = request.form.get("start_date")
+    end_date = request.form.get("end_date")
+
+    db.execute(
+                "INSERT INTO tasks (account_id, task_name, description, difficulty, start_date, end_date)" 
+                + "VALUES (:account_id, :task_name, :description, :difficulty, :start_date, :end_date)", 
+                account_id = session["user_id"], task_name=task_name, description=task_description, difficulty=task_difficulty, start_date=start_date, end_date=end_date)
     return redirect("/")
 
-app.run()
+#if __name__ == "__main__":
+  #  app.run()

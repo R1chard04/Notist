@@ -6,7 +6,7 @@ from flask import redirect, render_template, request, session
 from functools import wraps
 from datetime import datetime, timezone
 from cs50 import SQL
-from datetime import date, timedelta
+import datetime
 
 db = SQL("sqlite:///accounts.db")
 
@@ -36,7 +36,5 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def today_date():
-    today = date.today()
-    d = today.strftime("%b-%d-%Y")
-    return d
+def today_date(time_difference):
+    return datetime.date.today() + datetime.timedelta(time_difference)

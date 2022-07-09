@@ -12,16 +12,17 @@
                 <th scope="col">Task</th>
                 <th scope="col">Description</th>
                 <th scope="col">Difficulty</th>
-                <th scope="col">Complete</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
-            {% for day in range(30) %}
+            {% for row in range(length) %}
             <tr>
-                <th scope="row">{{ date }}</th>
-                <td>{{ task_name }}</td>
-                <td>{{ task_description }}</td>
-                <td>{{ task_difficulty }}</td>
+                <td>{{ start[row] }} to {{ end[row]}}</td>
+                <td>{{ name[row] }}</td>
+                <td>{{ description[row] }}</td>
+                <td>{{ difficulty[row] }}</td>
+                <td><button id="completed_button" type="button">Completed</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -1,1 +1,28 @@
-{% extends layout.html %}
+{% extends "layout.html" %}
+
+{% block titie %}
+    Create a Task!
+{% endblock %}
+
+{% block main %}
+    <form action="/create_task" method="post">
+        <div class="mb-3">
+            <input required autocomplete="off" class="form-control mx-auto w-auto" id="task_name" name="task_name" placeholder="Task name" type="text">
+        </div>
+        <div class="mb-3">
+            <input required autocomplete="off" class="form-control mx-auto w-auto" id="task_description" name="task_description" placeholder="Task description" type="text">
+        </div>
+        <div>
+            <span>0</span>
+              <input class="border-0" id="task_difficulty" name="task_difficulty" type="range" min="0" max="10" step="1" />
+            <span>10</span>
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" class="form-control mx-auto w-auto" id="start_date" name="start_date" placeholder="Start date" type="date">
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" class="form-control mx-auto w-auto" id="end_date" name="end_date" placeholder="End date" type="date">
+        </div>
+        <button class="btn btn-primary" type="submit">Create!</button>
+    </form>
+{% endblock %}
