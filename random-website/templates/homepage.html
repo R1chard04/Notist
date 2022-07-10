@@ -16,13 +16,18 @@
             </tr>
         </thead>
         <tbody>
-            {% for row in range(length) %}
+            {% for result in results %}
             <tr>
-                <td>{{ start[row] }} to {{ end[row]}}</td>
-                <td>{{ name[row] }}</td>
-                <td>{{ description[row] }}</td>
-                <td>{{ difficulty[row] }}</td>
-                <td><button id="completed_button" type="button">Completed</td>
+                <td>{{ result["start_date"] }} to {{ result["end_date"] }}</td>
+                <td>{{ result["task_name"] }}</td>
+                <td>{{ result["description"] }}</td>
+                <td>{{ result["difficulty"] }}</td>
+                <td>
+                    <form action="/delete" method="post">
+                        <input name="id" type="hidden" value="{{ result.id }}">
+                        <input type="submit" value="Delete">
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

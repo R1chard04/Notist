@@ -17,6 +17,7 @@ app.config["PREFERRED_URL_SCHEME"] = "https"
 app.config["DEBUG"] = False
 Session(app)
 
+#Restricts cache 
 @app.after_request
 def after_request(response):
     response.headers["CACHE-Control"] = "no-cache, no-store, must-revalidate"
@@ -24,35 +25,22 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+#HOMEPAGE
 @app.route("/")
 @login_required
 def homepage():
-    result = db.execute("SELECT * FROM tasks WHERE account_id = ? ORDER BY start_date ASC", session["user_id"])
-    name = []
-    description = []
-    difficulty = []
-    start = []
-    end = []
+    results = db.execute("SELECT * FROM tasks WHERE account_id = ? ORDER BY start_date ASC", session["user_id"])
+    return render_template("homepage.html", length=length, results=results)
 
-    for i in range(len(result)):
-        tmp1 = result[i]["task_name"]
-        name.append(tmp1)
-
-        tmp2 = result[i]["description"]
-        description.append(tmp2)
-
-        tmp3 = result[i]["difficulty"]
-        difficulty.append(tmp3)
-
-        tmp4 = result[i]["start_date"]
-        start.append(tmp4)
-
-        tmp5 = result[i]["end_date"]
-        end.append(tmp5)
+#Allows user to delete a task
+@app.route("/delete", methods=["POST"])
+@login_required
+def delete():   
+    id = request.form.get("id")
+    db.execute("DELETE FROM tasks WHERE account_id=? AND id=?", session["user_id"], id)
+    return redirect("/")
     
-    length = len(name)
-    return render_template("homepage.html", name=name, description = description, difficulty = difficulty, start=start, end=end, length=length)
-
+#Allows user to register for new account
 @app.route("/register", methods = ["GET", "POST"])
 def register():
 
@@ -77,7 +65,7 @@ def register():
 
     return render_template("register.html")
 
-
+#Allows user to log into account
 @app.route("/login", methods = ["GET", "POST"])
 def login():
     session.clear()
@@ -99,18 +87,19 @@ def login():
 
     return redirect("/")
 
+#Allows user to log out of account
 @app.route("/logout", methods = ["GET", "POST"])
 def logout():
     session.clear()
     return redirect("/")
 
+#Create a task: insert name of task, description of task, difficulty of task (1-10), start/end date
 @app.route("/create_task", methods = ["GET", "POST"])
 @login_required
 def create_task():
     if request.method == "GET":
         return render_template("create_task.html")
-
-    #TODO: 
+ 
     task_name = request.form.get("task_name")
     task_description = request.form.get("task_description")
     task_difficulty = request.form.get("task_difficulty")
@@ -123,5 +112,19 @@ def create_task():
                 account_id = session["user_id"], task_name=task_name, description=task_description, difficulty=task_difficulty, start_date=start_date, end_date=end_date)
     return redirect("/")
 
+#Settings: update email, change username/password, 
+@app.route("/settings", methods = ["GET", "POST"])
+@login_required
+def settings():
+    if request.method == "GET":
+        return render_template("settings.html")
+    
+    redirect("/")
+
+
+
+
+
 #if __name__ == "__main__":
   #  app.run()
+
