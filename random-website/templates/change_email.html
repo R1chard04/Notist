@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Settings - Change my Email Address
+{% endblock %}
+
+{% block main %}
+    <script>
+        function validate(){
+            var mail = document.getElementById("text").value;
+
+            var regex = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/
+
+            if(regex.test(mail)){
+                alert("Success!")
+                return true
+            } else {
+                alert("Invalid Email Address!")
+                return false;
+            }
+        }
+
+    </script>
+
+    <form action="/change_email" method="post">
+        <label>Add/Update Email: </label>
+        <input type="text" id="text" placeholder="Email" name="email" />
+        <button onclick="validate()" type="button" >Submit</button>
+    </form>
+{% endblock %}

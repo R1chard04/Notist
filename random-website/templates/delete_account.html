@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Settings - Delete my Account
+{% endblock %}
+
+
+
+{% block main %}
+
+    <form action="/settings" method="post">
+        <label>We're sorry to see you go! Tell us how we could do better!</label>
+        <input type="text" id="feedback" name="feedback">
+    </form>
+{% endblock %}

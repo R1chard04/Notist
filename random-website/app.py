@@ -17,6 +17,7 @@ app.config["PREFERRED_URL_SCHEME"] = "https"
 app.config["DEBUG"] = False
 Session(app)
 
+
 #Restricts cache 
 @app.after_request
 def after_request(response):
@@ -25,12 +26,14 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+
 #HOMEPAGE
 @app.route("/")
 @login_required
 def homepage():
     results = db.execute("SELECT * FROM tasks WHERE account_id = ? ORDER BY start_date ASC", session["user_id"])
-    return render_template("homepage.html", length=length, results=results)
+    return render_template("homepage.html", results=results)
+
 
 #Allows user to delete a task
 @app.route("/delete", methods=["POST"])
@@ -40,6 +43,7 @@ def delete():
     db.execute("DELETE FROM tasks WHERE account_id=? AND id=?", session["user_id"], id)
     return redirect("/")
     
+
 #Allows user to register for new account
 @app.route("/register", methods = ["GET", "POST"])
 def register():
@@ -56,18 +60,21 @@ def register():
         
         username = request.form.get("username")
         password = generate_password_hash(request.form.get("password"), method="pbkdf2:sha256", salt_length=8)
+        email = request.form.get("email")
         first_name = request.form.get("first_name")
         last_name = request.form.get("last_name")
 
-        register = db.execute("INSERT INTO accounts (first_name, last_name, username, password) VALUES (:first_name, :last_name, :username, :password)", first_name=first_name, last_name=last_name, username=username, password=password)
+        register = db.execute("INSERT INTO accounts (first_name, last_name, username, password, email) VALUES (:first_name, :last_name, :username, :password, :email)", first_name=first_name, last_name=last_name, username=username, password=password, email=email)
         session["user_id"] = register
         return redirect("/")
 
     return render_template("register.html")
 
+
 #Allows user to log into account
 @app.route("/login", methods = ["GET", "POST"])
 def login():
+    
     session.clear()
 
     if request.method == "GET":
@@ -93,6 +100,7 @@ def logout():
     session.clear()
     return redirect("/")
 
+
 #Create a task: insert name of task, description of task, difficulty of task (1-10), start/end date
 @app.route("/create_task", methods = ["GET", "POST"])
 @login_required
@@ -112,6 +120,7 @@ def create_task():
                 account_id = session["user_id"], task_name=task_name, description=task_description, difficulty=task_difficulty, start_date=start_date, end_date=end_date)
     return redirect("/")
 
+
 #Settings: update email, change username/password, 
 @app.route("/settings", methods = ["GET", "POST"])
 @login_required
@@ -119,10 +128,19 @@ def settings():
     if request.method == "GET":
         return render_template("settings.html")
     
-    redirect("/")
+    c_email = request.form.get("email")
+    c_username = request.form.get("changed_username")
+    c_password = request.form.get("changed_password")
+    c_confirmation = request.form.get("changed_password_confirmation")
+    
+    if c_email: 
+        db.execute("UPDATE accounts SET email=? WHERE id=?", c_email, session["user_id"])
+    elif c_username:
+        db.execute("UPDATE accounts SET username=? WHERE id=?", c_username, session["user_id"])
+    elif c_password and c_confirmation and (c_password == c_confirmation):
+        db.execute("UPDATE accounts SET password=? WHERE id=?", c_username, session["user_id"])
 
-
-
+    return redirect("/settings")
 
 
 #if __name__ == "__main__":

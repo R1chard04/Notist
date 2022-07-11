@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Settings - Change my Username
+{% endblock %}
+
+
+{% block main %}
+
+    <form action="/change_username" method="post">
+        <label>Change Username </label>
+        <input type="text" id="changed_username" name="changed_username">
+        <input type="submit" id="changed_username" name="changed_username"><br>
+    </form>
+{% endblock %}
