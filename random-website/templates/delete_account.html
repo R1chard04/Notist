@@ -9,7 +9,17 @@
 {% block main %}
 
     <form action="/settings" method="post">
-        <label>We're sorry to see you go! Tell us how we could do better!</label>
-        <input type="text" id="feedback" name="feedback">
+        <label>We're sorry to see you go! Tell us how we could do better!</label><br>
+        <input autofocus type="text" id="feedback" name="feedback"><br>
+
+        <label>Password and password confirmation are required for authentication.</label><br>
+        <input required type="password" id="password" name="password_confirmation" placeholder="Password">
+        <input required type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm your password"> <br>
+
+        <label>CONSENT</label>
+        <p>By selecting this checkbox, I consent to my account being deleted.</p>
+        <input required type="checkbox" id="consent" name="consent">
+
+        <input type="submit" id="submit" name="submit" value="I consent">
     </form>
 {% endblock %}

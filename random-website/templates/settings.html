@@ -6,10 +6,15 @@
 
 
 {% block main %}
-
-    <button type="submit"><a href="/change_email">Change my Email</a></button>
-    <button type="submit"><a href="/change_username">Change my Username</a></button>
-    <button type="submit"><a href="/change_password">Change my Password</a></button>
-    <button type="submit"><a href="/delete_account">Delete my Account</a></button>
+<style>
+    h1 {text-align: center;}
+</style>
+    <h1>Settings</h1>
+    <form action="/settings" method="post">
+        <input id="email" name="email" type="submit" value="Change my Email">
+        <input id="username" name="username" type="submit" value="Change my Username">
+        <input id="password" name="password" type="submit" value="Change my Password">
+        <input id="delete" name="delete" type="submit" value="Delete my Account">
+    </form>
 
 {% endblock %}

@@ -9,7 +9,7 @@
 
     <form action="/change_username" method="post">
         <label>Change Username </label>
-        <input type="text" id="changed_username" name="changed_username">
+        <input required autofocus type="text" id="changed_username" name="changed_username" placeholder={{ account[0].username }}>
         <input type="submit" id="changed_username" name="changed_username"><br>
     </form>
 {% endblock %}
